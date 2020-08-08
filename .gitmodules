@@ -1,3 +1,6 @@
 [submodule "SimpleMultithreadQueue"]
 	path = SimpleMultithreadQueue
 	url = https://github.com/AndreevNikita/SimpleMultithreadQueue
+[submodule "NetBinSerializer"]
+	path = NetBinSerializer
+	url = https://github.com/AndreevNikita/NetBinSerializer

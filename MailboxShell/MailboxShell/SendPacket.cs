@@ -1,13 +1,12 @@
 ﻿using MailboxShell;
-using Polygon.Utils;
-using Polygon.Utils.Serialization;
+using NetBinSerializer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Polygon.Network
+namespace MailboxShell
 {
 	public class SendPacket : Packet {
 		public readonly SerializeStream stream = new SerializeStream();

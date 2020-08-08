@@ -1,5 +1,4 @@
-﻿using Polygon.Network;
-using SimpleMutithreadQueue;
+﻿using SimpleMutithreadQueue;
 using System;
 using System.Collections.Generic;
 using System.Linq;
