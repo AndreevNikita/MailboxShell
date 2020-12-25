@@ -68,6 +68,8 @@ namespace MailboxShell
 			return null;
 		}
 
+		private byte[] receiveLengthBuffer = new byte[sizeof(int)];
+
 		public virtual bool tick() {
 			if(!socket.Connected)
 				return false;
@@ -77,17 +79,18 @@ namespace MailboxShell
 						currentReceivePacket = new Packet();
 
 					if(!currentReceivePacket.IsLengthKnown) { 
-						if(socket.Available >= -currentReceivePacket.handledLength) {
-							byte[] buffer = new byte[-currentReceivePacket.handledLength];
-							currentReceivePacket.handledLength += socket.Receive(buffer, 0, -currentReceivePacket.handledLength, 0);
-							currentReceivePacket.length |= BitConverter.ToInt32(buffer, 0) << ((4 - buffer.Length) * 8);
+						if(socket.Available >= receiveLengthBuffer.Length) {
+							currentReceivePacket.handledLength += socket.Receive(receiveLengthBuffer, 0, receiveLengthBuffer.Length, 0);
+							currentReceivePacket.length = BitConverter.ToInt32(receiveLengthBuffer, 0);
 						
 							if(!currentReceivePacket.IsLengthKnown)
 								break;
 							currentReceivePacket.createBuffer();
 						} else
 							break;
-					} else {
+					} 
+
+					if(currentReceivePacket.IsLengthKnown) {
 						if(socket.Available >= currentReceivePacket.length) { 
 							try {
 								currentReceivePacket.handledLength += socket.Receive(currentReceivePacket.data, currentReceivePacket.handledLength, currentReceivePacket.length - currentReceivePacket.handledLength, 0);
@@ -117,9 +120,9 @@ namespace MailboxShell
 					if(!currentSendPacket.IsLengthKnown) { //Если длина пакета данных передалась не полностью
 						byte[] lengthBytes = BitConverter.GetBytes(currentSendPacket.length);
 						currentSendPacket.handledLength += socket.Send(lengthBytes, 4 + currentSendPacket.handledLength, -currentSendPacket.handledLength, 0);
-						if(!currentSendPacket.IsLengthKnown)
-							break;
-					} else { //Если длина пакета уже передалась
+					} 
+
+					if(currentSendPacket.IsLengthKnown) { //Если длина пакета уже передалась
 						currentSendPacket.handledLength += socket.Send(currentSendPacket.data, currentSendPacket.handledLength, currentSendPacket.length - currentSendPacket.handledLength, 0);
 						if(currentSendPacket.handledLength == currentSendPacket.length) {
 							currentSendPacket = null;

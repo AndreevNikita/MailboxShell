@@ -4,16 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4E8CDBF7-CC5D-4A04-AB3E-089CE97044D9}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MailboxShell</RootNamespace>
-    <AssemblyName>MailboxShell</AssemblyName>
+    <ProjectGuid>{D27D791B-A2BC-4D2C-8A57-C54DA1EB6DA8}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Test</RootNamespace>
+    <AssemblyName>Test</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -41,19 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Mailbox.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SendPacket.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\NetBinSerializer\NetBinSerializer\NetBinSerializer\NetBinSerializer.csproj">
-      <Project>{DC36AE91-5386-4BDB-A720-0F482F78A6BD}</Project>
-      <Name>NetBinSerializer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\SimpleMultithreadQueue\SimpleMultithreadQueue\SimpleMultithreadQueue\SimpleMultithreadQueue.csproj">
-      <Project>{9BE69ACE-B0E7-4345-A87B-84A1DC8D9585}</Project>
-      <Name>SimpleMultithreadQueue</Name>
-    </ProjectReference>
+    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
