@@ -45,10 +45,12 @@ namespace MailboxShell
 
 		Packet currentSendPacket = null;
 		Packet currentReceivePacket = null;
+		int packetsPerTick;
 
-		public Mailbox(Socket socket, int maxPacketSize = 1024) {
+		public Mailbox(Socket socket, int packetsPerTick = 100, int maxPacketSize = 1024) {
 			this.Socket = socket;
 			socket.Blocking = false; //Перевод сокета в неблокируемый режим
+			this.packetsPerTick = packetsPerTick;
 			this.maxPacketSize = maxPacketSize;
 		}
 
@@ -70,9 +72,12 @@ namespace MailboxShell
 		private byte[] receiveLengthBuffer = new byte[sizeof(int)];
 
 		public virtual bool tick() {
+			int packetsCounter;
+
 			if(!Socket.Connected)
 				return false;
 			try {
+				packetsCounter = 0;
 				while(true) {
 					if(currentReceivePacket == null)
 						currentReceivePacket = new Packet();
@@ -100,6 +105,9 @@ namespace MailboxShell
 								//lock(receivedQueue)
 								receivedQueue.Enqueue(currentReceivePacket);
 								currentReceivePacket = null;
+								packetsCounter++;
+								if(packetsCounter == packetsPerTick)
+									break;
 							} else
 								break;
 						} else
@@ -107,7 +115,7 @@ namespace MailboxShell
 					}
 				}
 			
-				
+				packetsCounter = 0;
 				while(true) {
 					
 					if(currentSendPacket == null) {
@@ -125,6 +133,9 @@ namespace MailboxShell
 						currentSendPacket.handledLength += Socket.Send(currentSendPacket.data, currentSendPacket.handledLength, currentSendPacket.length - currentSendPacket.handledLength, 0);
 						if(currentSendPacket.handledLength == currentSendPacket.length) {
 							currentSendPacket = null;
+							packetsCounter++;
+							if(packetsCounter == packetsPerTick)
+								break;
 						}  else
 							break;
 					}
