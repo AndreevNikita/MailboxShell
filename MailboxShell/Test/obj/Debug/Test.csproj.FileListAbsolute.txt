@@ -5,3 +5,8 @@ C:\Users\Nick\Documents\GitHub\MailboxShell\MailboxShell\Test\bin\Debug\Test.exe
 C:\Users\Nick\Documents\GitHub\MailboxShell\MailboxShell\Test\bin\Debug\Test.pdb
 C:\Users\Nick\Documents\GitHub\MailboxShell\MailboxShell\Test\obj\Debug\Test.exe
 C:\Users\Nick\Documents\GitHub\MailboxShell\MailboxShell\Test\obj\Debug\Test.pdb
+C:\Users\Nick\Documents\GitHub\MailboxShell\MailboxShell\Test\bin\Debug\MailboxShell.dll
+C:\Users\Nick\Documents\GitHub\MailboxShell\MailboxShell\Test\bin\Debug\SimpleMultithreadQueue.dll
+C:\Users\Nick\Documents\GitHub\MailboxShell\MailboxShell\Test\bin\Debug\SimpleMultithreadQueue.pdb
+C:\Users\Nick\Documents\GitHub\MailboxShell\MailboxShell\Test\bin\Debug\MailboxShell.pdb
+C:\Users\Nick\Documents\GitHub\MailboxShell\MailboxShell\Test\obj\Debug\Test.csproj.CopyComplete

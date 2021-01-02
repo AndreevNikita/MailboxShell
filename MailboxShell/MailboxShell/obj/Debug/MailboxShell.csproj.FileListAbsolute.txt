@@ -1,8 +1,6 @@
 C:\Users\Nick\Documents\GitHub\MailboxShell\MailboxShell\MailboxShell\bin\Debug\MailboxShell.dll
 C:\Users\Nick\Documents\GitHub\MailboxShell\MailboxShell\MailboxShell\bin\Debug\MailboxShell.pdb
-C:\Users\Nick\Documents\GitHub\MailboxShell\MailboxShell\MailboxShell\bin\Debug\NetBinSerializer.dll
 C:\Users\Nick\Documents\GitHub\MailboxShell\MailboxShell\MailboxShell\bin\Debug\SimpleMultithreadQueue.dll
-C:\Users\Nick\Documents\GitHub\MailboxShell\MailboxShell\MailboxShell\bin\Debug\NetBinSerializer.pdb
 C:\Users\Nick\Documents\GitHub\MailboxShell\MailboxShell\MailboxShell\bin\Debug\SimpleMultithreadQueue.pdb
 C:\Users\Nick\Documents\GitHub\MailboxShell\MailboxShell\MailboxShell\obj\Debug\MailboxShell.csprojAssemblyReference.cache
 C:\Users\Nick\Documents\GitHub\MailboxShell\MailboxShell\MailboxShell\obj\Debug\MailboxShell.csproj.CoreCompileInputs.cache

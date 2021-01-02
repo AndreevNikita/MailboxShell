@@ -43,13 +43,8 @@
   <ItemGroup>
     <Compile Include="Mailbox.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SendPacket.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\NetBinSerializer\NetBinSerializer\NetBinSerializer\NetBinSerializer.csproj">
-      <Project>{DC36AE91-5386-4BDB-A720-0F482F78A6BD}</Project>
-      <Name>NetBinSerializer</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\SimpleMultithreadQueue\SimpleMultithreadQueue\SimpleMultithreadQueue\SimpleMultithreadQueue.csproj">
       <Project>{9BE69ACE-B0E7-4345-A87B-84A1DC8D9585}</Project>
       <Name>SimpleMultithreadQueue</Name>

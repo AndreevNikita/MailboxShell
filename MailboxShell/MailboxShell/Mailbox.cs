@@ -38,9 +38,8 @@ namespace MailboxShell
 	}
 
 	public class Mailbox {
-		public readonly Socket socket;
+		public Socket Socket { get; private set; }
 		readonly int maxPacketSize;
-		//Queue<Packet> sendQueue = new Queue<Packet>();
 		MultithreadQueue<Packet> sendQueue = new MultithreadQueue<Packet>();
 		MultithreadQueue<Packet> receivedQueue = new MultithreadQueue<Packet>();
 
@@ -48,17 +47,13 @@ namespace MailboxShell
 		Packet currentReceivePacket = null;
 
 		public Mailbox(Socket socket, int maxPacketSize = 1024) {
-			this.socket = socket;
+			this.Socket = socket;
 			socket.Blocking = false; //Перевод сокета в неблокируемый режим
 			this.maxPacketSize = maxPacketSize;
 		}
 
 		public void send(Packet packet) {
 			sendQueue.Enqueue(packet);
-		}
-
-		public void send(params object[] data) {
-			send(new SendPacket().writeArray(data).flush());
 		}
 
 		public Packet next() {
@@ -68,10 +63,14 @@ namespace MailboxShell
 			return null;
 		}
 
+		public IEnumerable<Packet> getAllReceived() { 
+			return receivedQueue.R_PopAll();
+		}
+
 		private byte[] receiveLengthBuffer = new byte[sizeof(int)];
 
 		public virtual bool tick() {
-			if(!socket.Connected)
+			if(!Socket.Connected)
 				return false;
 			try {
 				while(true) {
@@ -79,8 +78,8 @@ namespace MailboxShell
 						currentReceivePacket = new Packet();
 
 					if(!currentReceivePacket.IsLengthKnown) { 
-						if(socket.Available >= receiveLengthBuffer.Length) {
-							currentReceivePacket.handledLength += socket.Receive(receiveLengthBuffer, 0, receiveLengthBuffer.Length, 0);
+						if(Socket.Available >= receiveLengthBuffer.Length) {
+							currentReceivePacket.handledLength += Socket.Receive(receiveLengthBuffer, 0, receiveLengthBuffer.Length, 0);
 							currentReceivePacket.length = BitConverter.ToInt32(receiveLengthBuffer, 0);
 						
 							if(!currentReceivePacket.IsLengthKnown)
@@ -91,9 +90,9 @@ namespace MailboxShell
 					} 
 
 					if(currentReceivePacket.IsLengthKnown) {
-						if(socket.Available >= currentReceivePacket.length) { 
+						if(Socket.Available >= currentReceivePacket.length) { 
 							try {
-								currentReceivePacket.handledLength += socket.Receive(currentReceivePacket.data, currentReceivePacket.handledLength, currentReceivePacket.length - currentReceivePacket.handledLength, 0);
+								currentReceivePacket.handledLength += Socket.Receive(currentReceivePacket.data, currentReceivePacket.handledLength, currentReceivePacket.length - currentReceivePacket.handledLength, 0);
 							} catch(Exception e) { 
 								Console.WriteLine(e);
 							}
@@ -119,11 +118,11 @@ namespace MailboxShell
 
 					if(!currentSendPacket.IsLengthKnown) { //Если длина пакета данных передалась не полностью
 						byte[] lengthBytes = BitConverter.GetBytes(currentSendPacket.length);
-						currentSendPacket.handledLength += socket.Send(lengthBytes, 4 + currentSendPacket.handledLength, -currentSendPacket.handledLength, 0);
+						currentSendPacket.handledLength += Socket.Send(lengthBytes, 4 + currentSendPacket.handledLength, -currentSendPacket.handledLength, 0);
 					} 
 
 					if(currentSendPacket.IsLengthKnown) { //Если длина пакета уже передалась
-						currentSendPacket.handledLength += socket.Send(currentSendPacket.data, currentSendPacket.handledLength, currentSendPacket.length - currentSendPacket.handledLength, 0);
+						currentSendPacket.handledLength += Socket.Send(currentSendPacket.data, currentSendPacket.handledLength, currentSendPacket.length - currentSendPacket.handledLength, 0);
 						if(currentSendPacket.handledLength == currentSendPacket.length) {
 							currentSendPacket = null;
 						}  else
