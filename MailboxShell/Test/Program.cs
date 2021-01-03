@@ -1,5 +1,5 @@
 ﻿using MailboxShell;
-using SimpleMutithreadQueue;
+using SimpleMultithreadQueue;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,6 +63,7 @@ namespace Test {
 				if(request.Length == 1 && request.ToLower() == "q")
 					break;
 				mailbox.send(new Packet(Encoding.UTF8.GetBytes(request)));
+				Thread.Sleep(1);
 			}
 			isWorking = false;
 			mailboxTicker.Join();
@@ -84,6 +85,7 @@ namespace Test {
 		Thread mailboxesTicker;
 
 		List<Mailbox> connections = new List<Mailbox>();
+		MultithreadQueue<Mailbox> newConnections = new MultithreadQueue<Mailbox>();
 		MultithreadQueue<Mailbox> removeQueue = new MultithreadQueue<Mailbox>();
 
 		public EchoServer(string ip, int port) {
@@ -119,9 +121,7 @@ namespace Test {
 				while(true) { 
 					Mailbox mailbox = new Mailbox(serverSocket.Accept());
 					Console.WriteLine($"New connection: {((IPEndPoint)mailbox.Socket.RemoteEndPoint).Address.ToString()}:{((IPEndPoint)mailbox.Socket.RemoteEndPoint).Port}");
-					lock(connections) {
-						connections.Add(mailbox);
-					}
+					newConnections.Enqueue(mailbox);
 					Thread.Sleep(1);
 				}
 			} catch(SocketException e) {
@@ -146,12 +146,18 @@ namespace Test {
 			
 			while(IsWorking) { 
 				lock(connections) {
-					foreach(Mailbox mailbox in connections) { 
-						foreach(Packet packet in mailbox.getAllReceived()) {
-							handlePacket(mailbox, packet);
-						}
+					foreach(Mailbox newConnection in newConnections.R_PopReadyToNewQueue(true)) {
+						connections.Add(newConnection);
 					}
+				}
 
+				foreach(Mailbox mailbox in connections) { 
+					foreach(Packet packet in mailbox.swapGetReceived()) {
+						handlePacket(mailbox, packet);
+					}
+				}
+
+				lock(connections) {
 					foreach(Mailbox mailbox in removeQueue) { 
 						connections.Remove(mailbox);
 						mailbox.Socket.Close();

@@ -1,4 +1,4 @@
-﻿using SimpleMutithreadQueue;
+﻿using SimpleMultithreadQueue;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,6 +65,10 @@ namespace MailboxShell
 			return null;
 		}
 
+		public IEnumerable<Packet> swapGetReceived() { 
+			return receivedQueue.R_PopReadyToNewQueue(true);
+		}
+
 		public IEnumerable<Packet> getAllReceived() { 
 			return receivedQueue.R_PopAll();
 		}
@@ -96,11 +100,19 @@ namespace MailboxShell
 
 					if(currentReceivePacket.IsLengthKnown) {
 						if(Socket.Available >= currentReceivePacket.length) { 
-							try {
-								currentReceivePacket.handledLength += Socket.Receive(currentReceivePacket.data, currentReceivePacket.handledLength, currentReceivePacket.length - currentReceivePacket.handledLength, 0);
-							} catch(Exception e) { 
-								Console.WriteLine(e);
+							if(currentReceivePacket.length == 0) {
+							} else if(maxPacketSize != 0 && currentReceivePacket.length > maxPacketSize) { 
+								Socket.Close();
+								return false;
+							} else {
+								try {
+									currentReceivePacket.handledLength += Socket.Receive(currentReceivePacket.data, currentReceivePacket.handledLength, currentReceivePacket.length - currentReceivePacket.handledLength, 0);
+								} catch(Exception e) { 
+									Console.WriteLine(e);
+									Console.WriteLine(e.StackTrace);
+								}
 							}
+
 							if(currentReceivePacket.handledLength == currentReceivePacket.length) { 
 								//lock(receivedQueue)
 								receivedQueue.Enqueue(currentReceivePacket);
@@ -142,6 +154,7 @@ namespace MailboxShell
 				}
 			} catch(SocketException e) {
 				Console.WriteLine(e.Message);
+				Console.WriteLine(e.StackTrace);
 				return false;
 			}
 			return true;
