@@ -47,7 +47,7 @@ namespace MailboxShell
 		Packet currentReceivePacket = null;
 		int packetsPerTick;
 
-		public Mailbox(Socket socket, int packetsPerTick = 100, int maxPacketSize = 1024) {
+		public Mailbox(Socket socket, int packetsPerTick = 0, int maxPacketSize = 0) {
 			this.Socket = socket;
 			socket.Blocking = false; //Перевод сокета в неблокируемый режим
 			this.packetsPerTick = packetsPerTick;
@@ -118,7 +118,7 @@ namespace MailboxShell
 								receivedQueue.Enqueue(currentReceivePacket);
 								currentReceivePacket = null;
 								packetsCounter++;
-								if(packetsCounter == packetsPerTick)
+								if(packetsPerTick != 0 && packetsCounter == packetsPerTick)
 									break;
 							} else
 								break;
@@ -146,7 +146,7 @@ namespace MailboxShell
 						if(currentSendPacket.handledLength == currentSendPacket.length) {
 							currentSendPacket = null;
 							packetsCounter++;
-							if(packetsCounter == packetsPerTick)
+							if(packetsPerTick != 0 && packetsCounter == packetsPerTick)
 								break;
 						}  else
 							break;
