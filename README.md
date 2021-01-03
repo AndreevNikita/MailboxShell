@@ -6,7 +6,7 @@ So it segments TCP traffic for packets and returns data in this view.
 1. Get the Socket object
 2. Create Mailbox by `Mailbox mailbox = new Mailbox(socket)`
 
-#### Network packets sending and receiving completes by `mailbox.tick();` function in the NonBlocking mode. I.E. the best solution is to call this method with some interval (you can create a special thread to call this). `mailbox.tick();` returns false when an error occurs or remote host is diconnected
+**Network packets sending and receiving completes by `mailbox.tick();` function in the NonBlocking mode. I.E. the best solution is to call this method with some interval (you can create a special thread to call this). `mailbox.tick();` returns false when an error occurs or remote host is diconnected**
 
 ## Send a packet
 1. Create Packet object by `Packet packet = new Packet([yourdata : byte[]]);` (for example `Packet packet = new Packet(Encoding.UTF8.GetBytes("Hello!"))`)
@@ -16,7 +16,7 @@ So it segments TCP traffic for packets and returns data in this view.
 ## Receive a packet
 1. Call mailbox.tick() in main or other thread with some time intervals
 2. To receive packet on connected host use `mailbox.next()` to get a packet if any packet is received (null else) or `mailbox.getAllReceived()` to get all received packets Enumerator or if your update frequency is enought it's better to use `mailbox.swapGetReceived()` to get all received from last to current tick, but this function is unsafe with `mailbox.next()` (SimpleMultithreadQueue). I.E. you can use `mailbox.next()` amd `mailbox.getAllReceived()` or `mailbox.swapGetReceived()`
-#### Don't forget to call `mailbox.tick()`
+**!!!Don't forget to call `mailbox.tick()`!!!**
 3. Received data bytes array is in packet.data field
 
 ## Example
