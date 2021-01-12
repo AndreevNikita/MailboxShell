@@ -19,14 +19,14 @@ namespace Test {
 
 		static void ticker(object mailbox) {
 			while(isWorking) { 
-				((Mailbox)mailbox).tick();
+				((Mailbox)mailbox).Tick();
 				Thread.Sleep(1);
 			}
 		}
 
 		static void receiver(object mailbox) { 
 			while(isWorking) { 
-				foreach(Packet packet in ((Mailbox)mailbox).getAllReceived())
+				foreach(Packet packet in ((Mailbox)mailbox).GetAllReceived())
 					Console.WriteLine($"Server response: \"{Encoding.UTF8.GetString(packet.data)}\"");
 				Thread.Sleep(1);
 			}
@@ -62,7 +62,7 @@ namespace Test {
 				string request = Console.ReadLine();
 				if(request.Length == 1 && request.ToLower() == "q")
 					break;
-				mailbox.send(new Packet(Encoding.UTF8.GetBytes(request)));
+				mailbox.Send(new Packet(Encoding.UTF8.GetBytes(request)));
 				Thread.Sleep(1);
 			}
 			isWorking = false;
@@ -74,6 +74,15 @@ namespace Test {
 			echoServer?.stop();
 			Console.ReadKey();
 		}
+	}
+
+	public class ClientInfo : IMailboxOwner { 
+
+		public MailboxSafe MailboxSafe { get; } = new MailboxSafe();
+
+		public int messageCounter { get; set; } = 0;
+
+		
 	}
 
 	public class EchoServer {
@@ -120,6 +129,11 @@ namespace Test {
 				serverSocket.Listen(10);
 				while(true) { 
 					Mailbox mailbox = new Mailbox(serverSocket.Accept());
+					
+					//mailbox.SetOwner(new ClientInfo());
+					new ClientInfo().SetMailbox(mailbox);
+
+
 					Console.WriteLine($"New connection: {((IPEndPoint)mailbox.Socket.RemoteEndPoint).Address.ToString()}:{((IPEndPoint)mailbox.Socket.RemoteEndPoint).Port}");
 					newConnections.Enqueue(mailbox);
 					Thread.Sleep(1);
@@ -133,7 +147,7 @@ namespace Test {
 			while(IsWorking) {
 				lock(connections) {
 					foreach(Mailbox mailbox in connections) { 
-						if(!mailbox.tick()) { 
+						if(!mailbox.Tick()) { 
 							removeQueue.Enqueue(mailbox);
 						}
 					}
@@ -152,7 +166,7 @@ namespace Test {
 				}
 
 				foreach(Mailbox mailbox in connections) { 
-					foreach(Packet packet in mailbox.swapGetReceived()) {
+					foreach(Packet packet in mailbox.SwapGetReceived()) {
 						handlePacket(mailbox, packet);
 					}
 				}
@@ -170,7 +184,7 @@ namespace Test {
 
 		private void handlePacket(Mailbox senderMailbox, Packet packet) { 
 			string str = Encoding.UTF8.GetString(packet.data);
-			senderMailbox.send(new Packet(Encoding.UTF8.GetBytes("Echo: " + str)));
+			senderMailbox.Send(new Packet(Encoding.UTF8.GetBytes($"Echo ({senderMailbox.GetOwner<ClientInfo>().messageCounter++}): " + str)));
 		}
 
 	}

@@ -47,6 +47,49 @@ namespace MailboxShell
 		Packet currentReceivePacket = null;
 		int packetsPerTick;
 
+
+		private IMailboxOwner _MailboxOwner;
+		private static object OwnerChangeMutex { get; } = new object();
+
+		public IMailboxOwner MailboxOwner { 
+			get => _MailboxOwner;
+			set => SetOwner(value); 
+		}
+
+		public void RemoveOwner() { 
+			lock(OwnerChangeMutex) {
+				if(_MailboxOwner != null) {
+					_MailboxOwner.MailboxSafe.Mailbox = null;
+					_MailboxOwner = null;
+				}
+			}
+		}
+
+		public void SetOwner(IMailboxOwner newOwner) {
+			if(newOwner == null) { 
+				RemoveOwner();
+				return;
+			}
+
+			lock(OwnerChangeMutex) {
+				//Remove new owner's mailbox's owner
+				if(newOwner.MailboxSafe.Mailbox != null) { 
+					newOwner.MailboxSafe.Mailbox.MailboxOwner = null;
+				}
+				//Remove this mailbox link from last owner
+				if(_MailboxOwner != null) { 
+					_MailboxOwner.MailboxSafe.Mailbox = null;
+				}
+
+				newOwner.MailboxSafe.Mailbox = this;
+				_MailboxOwner = newOwner;
+			}
+		}
+
+		public TYPE GetOwner<TYPE>() where TYPE : IMailboxOwner {
+			return (TYPE)_MailboxOwner;
+		}
+
 		public Mailbox(Socket socket, int packetsPerTick = 0, int maxPacketSize = 0) {
 			this.Socket = socket;
 			socket.Blocking = false; //Перевод сокета в неблокируемый режим
@@ -54,28 +97,28 @@ namespace MailboxShell
 			this.maxPacketSize = maxPacketSize;
 		}
 
-		public void send(Packet packet) {
+		public void Send(Packet packet) {
 			sendQueue.Enqueue(packet);
 		}
 
-		public Packet next() {
+		public Packet Next() {
 			Packet packet;
 			if(receivedQueue.R_Dequeue(out packet))
 				return packet;
 			return null;
 		}
 
-		public IEnumerable<Packet> swapGetReceived() { 
+		public IEnumerable<Packet> SwapGetReceived() { 
 			return receivedQueue.R_PopReadyToNewQueue(true);
 		}
 
-		public IEnumerable<Packet> getAllReceived() { 
+		public IEnumerable<Packet> GetAllReceived() { 
 			return receivedQueue.R_PopAll();
 		}
 
 		private byte[] receiveLengthBuffer = new byte[sizeof(int)];
 
-		public virtual bool tick() {
+		public virtual bool Tick() {
 			int packetsCounter;
 
 			if(!Socket.Connected)
@@ -158,6 +201,32 @@ namespace MailboxShell
 				return false;
 			}
 			return true;
+		}
+	}
+
+	public class MailboxSafe { 
+
+		public Mailbox Mailbox { get; internal set; }
+
+		public static explicit operator Mailbox(MailboxSafe safe) { 
+			return safe.Mailbox;
+		}
+
+	}
+
+	public interface IMailboxOwner { 
+
+		MailboxSafe MailboxSafe { get; }
+
+	}
+
+	public static class MailboxOwnerExtendion {
+		public static Mailbox GetMailbox(this IMailboxOwner owner) {
+			return owner.MailboxSafe.Mailbox;
+		}
+
+		public static void SetMailbox(this IMailboxOwner owner, Mailbox mailbox) {
+			mailbox.SetOwner(owner);
 		}
 	}
 }
