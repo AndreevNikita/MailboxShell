@@ -228,5 +228,9 @@ namespace MailboxShell
 		public static void SetMailbox(this IMailboxOwner owner, Mailbox mailbox) {
 			mailbox.SetOwner(owner);
 		}
+
+		public static void RemoveMailbox(this IMailboxOwner owner) {
+			owner.GetMailbox()?.RemoveOwner();
+		}
 	}
 }
