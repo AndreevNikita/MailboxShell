@@ -38,6 +38,9 @@ namespace MailboxShell
 	}
 
 	public class Mailbox {
+
+		public static bool PRINT_ERRORS = false;
+
 		public Socket Socket { get; private set; }
 		readonly int maxPacketSize;
 		MultithreadQueue<Packet> sendQueue = new MultithreadQueue<Packet>();
@@ -109,7 +112,7 @@ namespace MailboxShell
 		}
 
 		public IEnumerable<Packet> SwapGetReceived() { 
-			return receivedQueue.R_PopReadyToNewQueue(true);
+			return receivedQueue.R_PopAllToNewQueue();
 		}
 
 		public IEnumerable<Packet> GetAllReceived() { 
@@ -196,8 +199,10 @@ namespace MailboxShell
 					}
 				}
 			} catch(SocketException e) {
-				Console.WriteLine(e.Message);
-				Console.WriteLine(e.StackTrace);
+				if(PRINT_ERRORS) {
+					Console.WriteLine(e.Message);
+					Console.WriteLine(e.StackTrace);
+				}
 				return false;
 			}
 			return true;

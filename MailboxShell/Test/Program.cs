@@ -37,13 +37,18 @@ namespace Test {
 			Console.WriteLine("Select action:");
 			Console.WriteLine("1. Create server and connect");
 			Console.WriteLine("2. Connect to existing server");
+			Console.WriteLine("3. Stress test exisiting server");
 			EchoServer echoServer = null;
+			bool stressTest = false;
 			switch(Console.ReadLine()) {
 				case "1":
 					echoServer = new EchoServer(SERVER_IP, SERVER_PORT);
 					echoServer.start();
 					break;
 				case "2":
+					break;
+				case "3":
+					stressTest = true;
 					break;
 			}
 			
@@ -59,7 +64,7 @@ namespace Test {
 			mailboxReceiver.Start(mailbox);
 			Console.WriteLine("Enter q to exit");
 			while(true) { 
-				string request = Console.ReadLine();
+				string request = !stressTest ? Console.ReadLine() : "!!!!!!STRESS_TEST!!!!!!";
 				if(request.Length == 1 && request.ToLower() == "q")
 					break;
 				mailbox.Send(new Packet(Encoding.UTF8.GetBytes(request)));
@@ -160,7 +165,7 @@ namespace Test {
 			
 			while(IsWorking) { 
 				lock(connections) {
-					foreach(Mailbox newConnection in newConnections.R_PopReadyToNewQueue(true)) {
+					foreach(Mailbox newConnection in newConnections.R_PopAllToNewQueue()) {
 						connections.Add(newConnection);
 					}
 				}
