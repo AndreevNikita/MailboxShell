@@ -22,6 +22,8 @@ So it segments TCP traffic for packets and returns data in this view.
 ## Mailbox's owner
 * You can set owner object of mailbox by `void SetOwner(IMailboxOwner)` method and get it by `TYPE GetOwner<TYPE>()` method.  
 * **Owner object** must implement **IMailboxOwner** interface and have **MailboxSafe** object  
+
+
 For example:
 ```c#
 public class ClientInfo : IMailboxOwner { 
