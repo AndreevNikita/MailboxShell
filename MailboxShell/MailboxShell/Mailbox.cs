@@ -50,6 +50,9 @@ namespace MailboxShell
 		Packet currentReceivePacket = null;
 		int packetsPerTick;
 
+		public bool IsConnected { get => Socket.Connected; }
+		public bool IsSendQueueEmpty { get => sendQueue.R_IsEmpty(); }
+
 
 		private IMailboxOwner _MailboxOwner;
 		private static object OwnerChangeMutex { get; } = new object();
@@ -120,6 +123,19 @@ namespace MailboxShell
 		}
 
 		private byte[] receiveLengthBuffer = new byte[sizeof(int)];
+
+		public void ClearReceivedQueue() { 
+			receivedQueue.R_Clear();
+		}
+
+		public void ClearSendQueue() { 
+			sendQueue.R_Clear();
+		}
+
+		public void ClearAll() { 
+			ClearReceivedQueue();
+			ClearSendQueue();
+		}
 
 		public virtual bool Tick() {
 			int packetsCounter;

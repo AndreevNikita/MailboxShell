@@ -19,6 +19,13 @@ So it segments TCP traffic for packets and returns data in this view.
 **!!!Don't forget to call `mailbox.tick()`!!!**
 3. Received data bytes array is in packet.data field
 
+## Other properties and methods
+* `bool IsConnected` - checks if socket is connected (**Connected** socket property)
+* `bool IsSendQueueEmpty` - checks if send queue is empty
+* `void ClearReceived()` - clears **received packet queue**
+* `void ClearReceivedQueue()` - clears **send packet queue**
+* `void ClearAll()` - clears both packet queues
+
 ## Mailbox's owner
 * You can set owner object of mailbox by `void SetOwner(IMailboxOwner)` method and get it by `TYPE GetOwner<TYPE>()` method.  
 * **Owner object** must implement **IMailboxOwner** interface and have **MailboxSafe** object  
