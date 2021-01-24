@@ -26,7 +26,7 @@ namespace Test {
 
 		static void receiver(object mailbox) { 
 			while(isWorking) { 
-				foreach(Packet packet in ((Mailbox)mailbox).GetAllReceived())
+				foreach(Packet packet in ((Mailbox)mailbox).ForeachReceived())
 					Console.WriteLine($"Server response: \"{Encoding.UTF8.GetString(packet.data)}\"");
 				Thread.Sleep(1);
 			}
@@ -171,7 +171,7 @@ namespace Test {
 				}
 
 				foreach(Mailbox mailbox in connections) { 
-					foreach(Packet packet in mailbox.SwapGetReceived()) {
+					foreach(Packet packet in mailbox.GetAllReceived()) {
 						handlePacket(mailbox, packet);
 					}
 				}

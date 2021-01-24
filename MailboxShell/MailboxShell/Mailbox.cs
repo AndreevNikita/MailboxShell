@@ -114,11 +114,11 @@ namespace MailboxShell
 			return null;
 		}
 
-		public IEnumerable<Packet> SwapGetReceived() { 
+		public IEnumerable<Packet> GetAllReceived() { 
 			return receivedQueue.R_PopAllToNewQueue();
 		}
 
-		public IEnumerable<Packet> GetAllReceived() { 
+		public IEnumerable<Packet> ForeachReceived() { 
 			return receivedQueue.R_PopAll();
 		}
 

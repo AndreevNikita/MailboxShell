@@ -15,7 +15,7 @@ So it segments TCP traffic for packets and returns data in this view.
 
 ## Receive a packet
 1. Call `mailbox.Tick()` in main or other thread with some time intervals
-2. To receive packet on connected host use `mailbox.Next()` to get a packet if any packet is received (null else) or `mailbox.GetAllReceived()` to get all received packets Enumerator or if your update frequency is enought it's better to use `mailbox.swapGetReceived()` to get all received from last to current tick, but this function is unsafe with `mailbox.next()` (SimpleMultithreadQueue). I.E. you can use `mailbox.next()` amd `mailbox.getAllReceived()` or `mailbox.swapGetReceived()`
+2. To receive packet on connected host use `mailbox.Next()` to get a packet if any packet is received (null else) or `mailbox.ForeachReceived()` to get all received packets Enumerator or if your update frequency is enought it's better to use `mailbox.GetAllReceived()` to get all received packets. It's better to use **GetAllReceived** method only to get all packets in one order or **Next** with **ForeachReceived** if you want to get each of packets separately
 **!!!Don't forget to call `mailbox.tick()`!!!**
 3. Received data bytes array is in packet.data field
 
