@@ -267,29 +267,6 @@ namespace MailboxShell
 		}
 
 
-		public async void SendAsyncTask() { 
-			while(true) {
-					
-				if(currentSendPacket == null) {
-					if(!sendQueue.R_DequeueReady(out currentSendPacket)) {
-						break;
-					}
-				}
-
-				if(!currentSendPacket.IsLengthKnown) { //Если длина пакета данных передалась не полностью
-					byte[] lengthBytes = BitConverter.GetBytes(currentSendPacket.length);
-					currentSendPacket.handledLength += await Socket.SendAsync(new ArraySegment<byte>(lengthBytes, 4 + currentSendPacket.handledLength, -currentSendPacket.handledLength), 0);
-				} 
-
-				if(currentSendPacket.IsLengthKnown) { //Если длина пакета уже передалась
-					currentSendPacket.handledLength += await Socket.SendAsync(new ArraySegment<byte>(currentSendPacket.data, currentSendPacket.handledLength, currentSendPacket.length - currentSendPacket.handledLength), 0);
-					if(currentSendPacket.handledLength == currentSendPacket.length) {
-						currentSendPacket = null;
-					}  else
-						break;
-				}
-			}
-		}
 
 	}
 
