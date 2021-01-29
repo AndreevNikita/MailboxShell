@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MailboxShell
@@ -35,6 +36,39 @@ namespace MailboxShell
 				return handledLength >= 0;
 			}
 		}
+
+		internal void LockData() { }
+	}
+
+	public class DynamicPacket : Packet { 
+		internal Mailbox owner;
+
+		private bool dataFixed = false;
+
+		public DynamicPacket(byte[] data) : base(data) {
+			this.data = null;
+		}
+
+		public bool ReplaceData(byte[] newData) {
+			if(dataFixed)
+				return false;
+
+			if(Monitor.TryEnter(data)) {
+				if(dataFixed)
+					return false;
+
+				data = newData;
+				return true;
+			} else { 
+				return false;
+			}
+		}
+
+		internal void FixData() { 
+			Monitor.Enter(data);
+			dataFixed = true;
+			Monitor.Exit(data);
+		}
 	}
 
 	public class Mailbox {
@@ -44,11 +78,15 @@ namespace MailboxShell
 		public Socket Socket { get; private set; }
 		readonly int maxPacketSize;
 		MultithreadQueue<Packet> sendQueue = new MultithreadQueue<Packet>();
+		MultithreadQueue<IEnumerator<Packet>> sendPartsQueue = new MultithreadQueue<IEnumerator<Packet>>();
+		LinkedList<IEnumerator<Packet>> sendPartsList = new LinkedList<IEnumerator<Packet>>();
+
 		MultithreadQueue<Packet> receivedQueue = new MultithreadQueue<Packet>();
 
 		Packet currentSendPacket = null;
 		Packet currentReceivePacket = null;
-		int packetsPerTick;
+		int receivePacketsPerTick;
+		int sendPacketsPerTick;
 
 		public bool IsConnected { get => Socket.Connected; }
 		public bool IsSendQueueEmpty { get => sendQueue.R_IsEmpty(); }
@@ -96,10 +134,11 @@ namespace MailboxShell
 			return (TYPE)_MailboxOwner;
 		}
 
-		public Mailbox(Socket socket, int packetsPerTick = 0, int maxPacketSize = 0) {
+		public Mailbox(Socket socket, int receivePacketsPerTick = 0, int sendPacketsPerTick = 0, int maxPacketSize = 0) {
 			this.Socket = socket;
 			socket.Blocking = false; //Перевод сокета в неблокируемый режим
-			this.packetsPerTick = packetsPerTick;
+			this.receivePacketsPerTick = receivePacketsPerTick;
+			this.sendPacketsPerTick = sendPacketsPerTick;
 			this.maxPacketSize = maxPacketSize;
 		}
 
@@ -143,6 +182,9 @@ namespace MailboxShell
 			if(!Socket.Connected)
 				return false;
 			try {
+				foreach(IEnumerator<Packet> parts in sendPartsQueue)
+					sendPartsList.AddLast(parts);
+
 				packetsCounter = 0;
 				while(true) {
 					if(currentReceivePacket == null)
@@ -180,7 +222,7 @@ namespace MailboxShell
 								receivedQueue.Enqueue(currentReceivePacket);
 								currentReceivePacket = null;
 								packetsCounter++;
-								if(packetsPerTick != 0 && packetsCounter == packetsPerTick)
+								if(receivePacketsPerTick != 0 && packetsCounter == receivePacketsPerTick)
 									break;
 							} else
 								break;
@@ -208,7 +250,7 @@ namespace MailboxShell
 						if(currentSendPacket.handledLength == currentSendPacket.length) {
 							currentSendPacket = null;
 							packetsCounter++;
-							if(packetsPerTick != 0 && packetsCounter == packetsPerTick)
+							if(sendPacketsPerTick != 0 && packetsCounter == sendPacketsPerTick)
 								break;
 						}  else
 							break;
@@ -223,7 +265,34 @@ namespace MailboxShell
 			}
 			return true;
 		}
+
+
+		public async void SendAsyncTask() { 
+			while(true) {
+					
+				if(currentSendPacket == null) {
+					if(!sendQueue.R_DequeueReady(out currentSendPacket)) {
+						break;
+					}
+				}
+
+				if(!currentSendPacket.IsLengthKnown) { //Если длина пакета данных передалась не полностью
+					byte[] lengthBytes = BitConverter.GetBytes(currentSendPacket.length);
+					currentSendPacket.handledLength += await Socket.SendAsync(new ArraySegment<byte>(lengthBytes, 4 + currentSendPacket.handledLength, -currentSendPacket.handledLength), 0);
+				} 
+
+				if(currentSendPacket.IsLengthKnown) { //Если длина пакета уже передалась
+					currentSendPacket.handledLength += await Socket.SendAsync(new ArraySegment<byte>(currentSendPacket.data, currentSendPacket.handledLength, currentSendPacket.length - currentSendPacket.handledLength), 0);
+					if(currentSendPacket.handledLength == currentSendPacket.length) {
+						currentSendPacket = null;
+					}  else
+						break;
+				}
+			}
+		}
+
 	}
+
 
 	public class MailboxSafe { 
 

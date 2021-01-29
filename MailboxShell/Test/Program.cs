@@ -33,7 +33,6 @@ namespace Test {
 		}
 
 		static void Main(string[] args) {
-			
 			Console.WriteLine("Select action:");
 			Console.WriteLine("1. Create server and connect");
 			Console.WriteLine("2. Connect to existing server");
