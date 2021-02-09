@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D27D791B-A2BC-4D2C-8A57-C54DA1EB6DA8}</ProjectGuid>
+    <ProjectGuid>{6D1496F7-8972-48E5-9A1C-1069B3CAAFCD}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Test</RootNamespace>
     <AssemblyName>Test</AssemblyName>
@@ -50,12 +50,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SimpleMultithreadQueue\SimpleMultithreadQueue\SimpleMultithreadQueue\SimpleMultithreadQueue.csproj">
-      <Project>{9be69ace-b0e7-4345-a87b-84a1dc8d9585}</Project>
+    <ProjectReference Include="..\..\SimpleMultithreadQueue\SimpleMultithreadQueue\SimpleMultithreadQueue.csproj">
+      <Project>{fd51dc8c-087c-4a86-8ce1-476e329832a5}</Project>
       <Name>SimpleMultithreadQueue</Name>
     </ProjectReference>
     <ProjectReference Include="..\MailboxShell\MailboxShell.csproj">
-      <Project>{4e8cdbf7-cc5d-4a04-ab3e-089ce97044d9}</Project>
+      <Project>{8839f0c4-f9f2-490b-90e5-50bede03e5ed}</Project>
       <Name>MailboxShell</Name>
     </ProjectReference>
   </ItemGroup>
