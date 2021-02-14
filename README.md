@@ -25,6 +25,7 @@ So it segments TCP traffic for packets and returns data in this view.
 * `void ClearReceived()` - clears **received packet queue**
 * `void ClearReceivedQueue()` - clears **send packet queue**
 * `void ClearAll()` - clears both packet queues
+* `Packet Packet.CloneDataRef()` - returns new ready for sending Packet with some data ref
 
 ## Mailbox's owner
 * You can set owner object of mailbox by `void SetOwner(IMailboxOwner)` method and get it by `TYPE GetOwner<TYPE>()` method.  

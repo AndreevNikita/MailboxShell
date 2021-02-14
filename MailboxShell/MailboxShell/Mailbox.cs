@@ -18,7 +18,7 @@ namespace MailboxShell
 			this.length = length;
 			this.handledLength = -4;
 			if(length > 0)
-				createBuffer();
+				CreateBuffer();
 		}
 
 		public Packet(byte[] data) {
@@ -27,7 +27,7 @@ namespace MailboxShell
 			this.handledLength = -4;
 		}
 
-		internal void createBuffer() { 
+		internal void CreateBuffer() { 
 			data = new byte[length];
 		}
 
@@ -35,6 +35,10 @@ namespace MailboxShell
 			get { 
 				return handledLength >= 0;
 			}
+		}
+
+		public Packet CloneDataRef() { 
+			return new Packet(data);
 		}
 
 		internal void LockData() { }
@@ -197,7 +201,7 @@ namespace MailboxShell
 						
 							if(!currentReceivePacket.IsLengthKnown)
 								break;
-							currentReceivePacket.createBuffer();
+							currentReceivePacket.CreateBuffer();
 						} else
 							break;
 					} 
