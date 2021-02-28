@@ -270,7 +270,9 @@ namespace MailboxShell
 			return true;
 		}
 
-
+		public void Close() { 
+			Socket.Close();
+		}
 
 	}
 
