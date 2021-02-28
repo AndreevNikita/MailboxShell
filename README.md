@@ -21,6 +21,7 @@ So it segments TCP traffic for packets and returns data in this view.
 
 ## Other properties and methods
 * `bool IsConnected` - checks if socket is connected (**Connected** socket property)
+* `void Close()` - close socket
 * `bool IsSendQueueEmpty` - checks if send queue is empty
 * `void ClearReceived()` - clears **received packet queue**
 * `void ClearReceivedQueue()` - clears **send packet queue**
