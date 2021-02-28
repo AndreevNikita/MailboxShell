@@ -19,15 +19,23 @@ namespace Test {
 
 		static void ticker(object mailbox) {
 			while(isWorking) { 
+				((Mailbox)mailbox).Send(new Packet(Encoding.UTF8.GetBytes("p")));
 				((Mailbox)mailbox).Tick();
+				if(!((Mailbox)mailbox).IsConnected) {
+					Console.WriteLine("Server closed");
+					break;
+				}
 				Thread.Sleep(1);
 			}
 		}
 
 		static void receiver(object mailbox) { 
 			while(isWorking) { 
-				foreach(Packet packet in ((Mailbox)mailbox).ForeachReceived())
-					Console.WriteLine($"Server response: \"{Encoding.UTF8.GetString(packet.data)}\"");
+				foreach(Packet packet in ((Mailbox)mailbox).ForeachReceived()) {
+					string responseString = Encoding.UTF8.GetString(packet.data);
+					if(responseString != "p")	
+						Console.WriteLine($"Server response: \"{responseString}\"");
+				}
 				Thread.Sleep(1);
 			}
 		}
@@ -66,7 +74,13 @@ namespace Test {
 				string request = !stressTest ? Console.ReadLine() : "!!!!!!STRESS_TEST!!!!!!";
 				if(request.Length == 1 && request.ToLower() == "q")
 					break;
+
+				if(!mailbox.IsConnected)
+						break;
+
 				mailbox.Send(new Packet(Encoding.UTF8.GetBytes(request)));
+				
+				
 				Thread.Sleep(1);
 			}
 			isWorking = false;
@@ -86,7 +100,8 @@ namespace Test {
 
 		public int messageCounter { get; set; } = 0;
 
-		
+		private static int CurrentClientNumber = 0; 
+		public int Number { get; } = CurrentClientNumber++;
 	}
 
 	public class EchoServer {
@@ -138,7 +153,7 @@ namespace Test {
 					new ClientInfo().SetMailbox(mailbox);
 
 
-					Console.WriteLine($"New connection: {((IPEndPoint)mailbox.Socket.RemoteEndPoint).Address.ToString()}:{((IPEndPoint)mailbox.Socket.RemoteEndPoint).Port}");
+					Console.WriteLine($"New connection: {((IPEndPoint)mailbox.Socket.RemoteEndPoint).Address.ToString()}:{((IPEndPoint)mailbox.Socket.RemoteEndPoint).Port}; {mailbox.GetOwner<ClientInfo>().Number} ");
 					newConnections.Enqueue(mailbox);
 					Thread.Sleep(1);
 				}
@@ -151,7 +166,10 @@ namespace Test {
 			while(IsWorking) {
 				lock(connections) {
 					foreach(Mailbox mailbox in connections) { 
-						if(!mailbox.Tick()) { 
+						mailbox.Send(new Packet(Encoding.UTF8.GetBytes("p")));
+
+						mailbox.Tick();
+						if(!mailbox.IsConnected) { 
 							removeQueue.Enqueue(mailbox);
 						}
 					}
@@ -176,18 +194,20 @@ namespace Test {
 				}
 
 				lock(connections) {
-					foreach(Mailbox mailbox in removeQueue) { 
+					foreach(Mailbox mailbox in removeQueue.R_PopAllToNewQueue()) { 
+						Console.WriteLine($"Disconnected {mailbox.GetOwner<ClientInfo>().Number} ");
 						connections.Remove(mailbox);
 						mailbox.Socket.Close();
 					}
 				}
-				removeQueue.R_Swap();
 				Thread.Sleep(1);
 			}
 		}
 
 		private void handlePacket(Mailbox senderMailbox, Packet packet) { 
 			string str = Encoding.UTF8.GetString(packet.data);
+			if(str == "p")
+				return;
 			senderMailbox.Send(new Packet(Encoding.UTF8.GetBytes($"Echo ({senderMailbox.GetOwner<ClientInfo>().messageCounter++}): " + str)));
 		}
 
