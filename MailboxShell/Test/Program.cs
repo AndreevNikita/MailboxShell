@@ -31,7 +31,7 @@ namespace Test {
 
 		static void receiver(object mailbox) { 
 			while(isWorking) { 
-				foreach(Packet packet in ((Mailbox)mailbox).ForeachReceived()) {
+				foreach(Packet packet in ((Mailbox)mailbox).GetAllReceived()) {
 					string responseString = Encoding.UTF8.GetString(packet.data);
 					if(responseString != "p")	
 						Console.WriteLine($"Server response: \"{responseString}\"");
@@ -44,7 +44,7 @@ namespace Test {
 			Console.WriteLine("Select action:");
 			Console.WriteLine("1. Create server and connect");
 			Console.WriteLine("2. Connect to existing server");
-			Console.WriteLine("3. Stress test exisiting server");
+			Console.WriteLine("3. Stress test an exisiting server");
 			EchoServer echoServer = null;
 			bool stressTest = false;
 			switch(Console.ReadLine()) {
@@ -69,17 +69,24 @@ namespace Test {
 			isWorking = true;
 			mailboxTicker.Start(mailbox);
 			mailboxReceiver.Start(mailbox);
-			Console.WriteLine("Enter q to exit");
+			Console.WriteLine("Enter 'b' to send a big packet; 'q' to exit");
+			Random rand = new Random();
 			while(true) { 
-				string request = !stressTest ? Console.ReadLine() : "!!!!!!STRESS_TEST!!!!!!";
-				if(request.Length == 1 && request.ToLower() == "q")
+				string request = !stressTest ? Console.ReadLine() : rand.NextDouble() < 0.5 ? "!!!!!!STRESS_TEST!!!!!!" : "b";
+				string lowerRequest = request.ToLower();
+				if(!mailbox.IsConnected)
 					break;
 
-				if(!mailbox.IsConnected)
-						break;
-
-				mailbox.Send(new Packet(Encoding.UTF8.GetBytes(request)));
-				
+				if(lowerRequest == "q") { 
+					break;
+				} else if(lowerRequest == "b") { 
+					Packet packet = new Packet(new byte[100500]);
+					mailbox.Send(packet);
+					continue;
+				} else { 
+					Packet packet = new Packet(Encoding.UTF8.GetBytes(request));
+					mailbox.Send(packet);
+				}
 				
 				Thread.Sleep(1);
 			}
@@ -205,7 +212,7 @@ namespace Test {
 		}
 
 		private void handlePacket(Mailbox senderMailbox, Packet packet) { 
-			string str = Encoding.UTF8.GetString(packet.data);
+			string str = packet.length < 1024 ? Encoding.UTF8.GetString(packet.data) : "Big packet!";
 			if(str == "p")
 				return;
 			senderMailbox.Send(new Packet(Encoding.UTF8.GetBytes($"Echo ({senderMailbox.GetOwner<ClientInfo>().messageCounter++}): " + str)));

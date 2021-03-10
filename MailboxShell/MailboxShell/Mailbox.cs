@@ -88,8 +88,9 @@ namespace MailboxShell
 		MultithreadQueue<Packet> receivedQueue = new MultithreadQueue<Packet>();
 
 		Packet currentSendPacket = null;
+		object currentSendPacketMutex = new object();
 		Packet currentReceivePacket = null;
-		int receivePacketsPerTick;
+		int maxReceiveFragmentsPerTick;
 		int sendPacketsPerTick;
 
 		public bool IsConnected { get => Socket.Connected; }
@@ -138,10 +139,10 @@ namespace MailboxShell
 			return (TYPE)_MailboxOwner;
 		}
 
-		public Mailbox(Socket socket, int receivePacketsPerTick = 0, int sendPacketsPerTick = 0, int maxPacketSize = 0) {
+		public Mailbox(Socket socket, int maxReceiveFragmentsPerTick = 64, int sendPacketsPerTick = 0, int maxPacketSize = 0) {
 			this.Socket = socket;
 			socket.Blocking = false; //Перевод сокета в неблокируемый режим
-			this.receivePacketsPerTick = receivePacketsPerTick;
+			this.maxReceiveFragmentsPerTick = maxReceiveFragmentsPerTick;
 			this.sendPacketsPerTick = sendPacketsPerTick;
 			this.maxPacketSize = maxPacketSize;
 		}
@@ -182,6 +183,7 @@ namespace MailboxShell
 
 		public virtual bool Tick() {
 			int packetsCounter;
+			int fragmentsCounter;
 
 			if(!Socket.Connected)
 				return false;
@@ -189,7 +191,7 @@ namespace MailboxShell
 				foreach(IEnumerator<Packet> parts in sendPartsQueue)
 					sendPartsList.AddLast(parts);
 
-				packetsCounter = 0;
+				fragmentsCounter = 0;
 				while(true) {
 					if(currentReceivePacket == null)
 						currentReceivePacket = new Packet();
@@ -207,7 +209,7 @@ namespace MailboxShell
 					} 
 
 					if(currentReceivePacket.IsLengthKnown) {
-						if(Socket.Available >= currentReceivePacket.length) { 
+						if(Socket.Available != 0) { 
 							if(currentReceivePacket.length == 0) {
 							} else if(maxPacketSize != 0 && currentReceivePacket.length > maxPacketSize) { 
 								Socket.Close();
@@ -222,17 +224,17 @@ namespace MailboxShell
 							}
 
 							if(currentReceivePacket.handledLength == currentReceivePacket.length) { 
-								//lock(receivedQueue)
 								receivedQueue.Enqueue(currentReceivePacket);
 								currentReceivePacket = null;
-								packetsCounter++;
-								if(receivePacketsPerTick != 0 && packetsCounter == receivePacketsPerTick)
-									break;
 							} else
 								break;
 						} else
 							break;
+						fragmentsCounter++;
+						if(maxReceiveFragmentsPerTick != 0 && fragmentsCounter == maxReceiveFragmentsPerTick)
+							break;
 					}
+					
 				}
 			
 				packetsCounter = 0;
@@ -240,6 +242,9 @@ namespace MailboxShell
 					
 					if(currentSendPacket == null) {
 						if(!sendQueue.R_DequeueReady(out currentSendPacket)) {
+							break;
+						}
+						if(currentSendPacket == null) { 
 							break;
 						}
 					}

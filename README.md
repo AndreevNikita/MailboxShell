@@ -19,6 +19,13 @@ So it segments TCP traffic for packets and returns data in this view.
 **!!!Don't forget to call `mailbox.tick()`!!!**
 3. Received data bytes array is in packet.data field
 
+## Constructor args
+Mailbox class has constructor: `public Mailbox(Socket socket, int maxReceiveFragmentsPerTick = 64, int sendPacketsPerTick = 0, int maxPacketSize = 0)`
+* `Socket socket` - socket that this object will be the facade of 
+* `int maxReceiveFragmentsPerTick` - limit of received fragments per tick
+* `int sendPacketsPerTick` - limit of packets, that can be sended per tick
+* `int maxPacketSize` - limit of received packet size
+
 ## Other properties and methods
 * `bool IsConnected` - checks if socket is connected (**Connected** socket property)
 * `void Close()` - close socket
