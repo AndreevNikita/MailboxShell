@@ -12,7 +12,7 @@ using System;
 using System.Reflection;
 
 [assembly: System.Reflection.AssemblyCompanyAttribute("Nikita Andreev")]
-[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyCopyrightAttribute("Nikita Andreev")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("C# TCP sockets shell for a more simple network packets sending and receiving")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]

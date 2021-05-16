@@ -2,10 +2,23 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Nikita Andreev</Authors>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Description>C# TCP sockets shell for a more simple network packets sending and receiving</Description>
+    <Copyright>Nikita Andreev</Copyright>
+    <RepositoryUrl>https://github.com/AndreevNikita/MailboxShell</RepositoryUrl>
+    <PackageTags>c# socket packets network tcp-socket c-sharp-library</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\SimpleMultithreadQueue\SimpleMultithreadQueue\SimpleMultithreadQueue.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\SerializeMethodsAutoBuilder\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Nick\\Documents\\GitHub\\MailboxShell\\MailboxShell\\MailboxShell\\MailboxShell.csproj": {}
+    "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\MailboxShell\\MailboxShell\\MailboxShell.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Nick\\Documents\\GitHub\\MailboxShell\\MailboxShell\\MailboxShell\\MailboxShell.csproj": {
+    "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\MailboxShell\\MailboxShell\\MailboxShell.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Nick\\Documents\\GitHub\\MailboxShell\\MailboxShell\\MailboxShell\\MailboxShell.csproj",
+        "projectUniqueName": "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\MailboxShell\\MailboxShell\\MailboxShell.csproj",
         "projectName": "MailboxShell",
-        "projectPath": "C:\\Users\\Nick\\Documents\\GitHub\\MailboxShell\\MailboxShell\\MailboxShell\\MailboxShell.csproj",
+        "projectPath": "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\MailboxShell\\MailboxShell\\MailboxShell.csproj",
         "packagesPath": "C:\\Users\\Nick\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Nick\\Documents\\GitHub\\MailboxShell\\MailboxShell\\MailboxShell\\obj\\",
+        "outputPath": "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\MailboxShell\\MailboxShell\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Nick\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -28,8 +28,8 @@
           "netstandard2.0": {
             "targetAlias": "netstandard2.0",
             "projectReferences": {
-              "C:\\Users\\Nick\\Documents\\GitHub\\MailboxShell\\SimpleMultithreadQueue\\SimpleMultithreadQueue\\SimpleMultithreadQueue.csproj": {
-                "projectPath": "C:\\Users\\Nick\\Documents\\GitHub\\MailboxShell\\SimpleMultithreadQueue\\SimpleMultithreadQueue\\SimpleMultithreadQueue.csproj"
+              "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\SimpleMultithreadQueue\\SimpleMultithreadQueue\\SimpleMultithreadQueue.csproj": {
+                "projectPath": "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\SimpleMultithreadQueue\\SimpleMultithreadQueue\\SimpleMultithreadQueue.csproj"
               }
             }
           }
@@ -61,18 +61,18 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Nick\\Documents\\GitHub\\MailboxShell\\SimpleMultithreadQueue\\SimpleMultithreadQueue\\SimpleMultithreadQueue.csproj": {
-      "version": "1.0.0",
+    "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\SimpleMultithreadQueue\\SimpleMultithreadQueue\\SimpleMultithreadQueue.csproj": {
+      "version": "1.0.1",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Nick\\Documents\\GitHub\\MailboxShell\\SimpleMultithreadQueue\\SimpleMultithreadQueue\\SimpleMultithreadQueue.csproj",
+        "projectUniqueName": "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\SimpleMultithreadQueue\\SimpleMultithreadQueue\\SimpleMultithreadQueue.csproj",
         "projectName": "SimpleMultithreadQueue",
-        "projectPath": "C:\\Users\\Nick\\Documents\\GitHub\\MailboxShell\\SimpleMultithreadQueue\\SimpleMultithreadQueue\\SimpleMultithreadQueue.csproj",
+        "projectPath": "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\SimpleMultithreadQueue\\SimpleMultithreadQueue\\SimpleMultithreadQueue.csproj",
         "packagesPath": "C:\\Users\\Nick\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Nick\\Documents\\GitHub\\MailboxShell\\SimpleMultithreadQueue\\SimpleMultithreadQueue\\obj\\",
+        "outputPath": "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\SimpleMultithreadQueue\\SimpleMultithreadQueue\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Nick\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -118,7 +118,7 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
         }
       }
     }

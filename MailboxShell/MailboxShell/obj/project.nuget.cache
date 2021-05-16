@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "v0dnZSOoScil9dTJVsHtoSd4kPmv7DTAQejUkmkJtr9ss2BXz8gld8UZ6ZsYn3clclicsq1jC4z9hIlEQcQ0pg==",
+  "dgSpecHash": "ZFpb7iS51+k4qHouBLjmLxr0hc8yluVUJ2hDB41yhtT6bQ47IuqVXR7Inhoa6b1hDz9tisoHXAE43vuu/OGs3g==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Nick\\Documents\\GitHub\\MailboxShell\\MailboxShell\\MailboxShell\\MailboxShell.csproj",
+  "projectFilePath": "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\MailboxShell\\MailboxShell\\MailboxShell.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Nick\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\Nick\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"

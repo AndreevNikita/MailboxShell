@@ -6,7 +6,7 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "SimpleMultithreadQueue": "1.0.0"
+          "SimpleMultithreadQueue": "1.0.1"
         },
         "compile": {
           "bin/placeholder/MailboxShell.dll": {}
@@ -15,7 +15,7 @@
           "bin/placeholder/MailboxShell.dll": {}
         }
       },
-      "SimpleMultithreadQueue/1.0.0": {
+      "SimpleMultithreadQueue/1.0.1": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "compile": {
@@ -33,7 +33,7 @@
       "path": "../MailboxShell/MailboxShell.csproj",
       "msbuildProject": "../MailboxShell/MailboxShell.csproj"
     },
-    "SimpleMultithreadQueue/1.0.0": {
+    "SimpleMultithreadQueue/1.0.1": {
       "type": "project",
       "path": "../../SimpleMultithreadQueue/SimpleMultithreadQueue/SimpleMultithreadQueue.csproj",
       "msbuildProject": "../../SimpleMultithreadQueue/SimpleMultithreadQueue/SimpleMultithreadQueue.csproj"
@@ -50,11 +50,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Nick\\Documents\\GitHub\\MailboxShell\\MailboxShell\\Test\\Test.csproj",
+      "projectUniqueName": "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\MailboxShell\\Test\\Test.csproj",
       "projectName": "Test",
-      "projectPath": "C:\\Users\\Nick\\Documents\\GitHub\\MailboxShell\\MailboxShell\\Test\\Test.csproj",
+      "projectPath": "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\MailboxShell\\Test\\Test.csproj",
       "packagesPath": "C:\\Users\\Nick\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Nick\\Documents\\GitHub\\MailboxShell\\MailboxShell\\Test\\obj\\",
+      "outputPath": "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\MailboxShell\\Test\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Nick\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -71,8 +71,8 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "projectReferences": {
-            "C:\\Users\\Nick\\Documents\\GitHub\\MailboxShell\\MailboxShell\\MailboxShell\\MailboxShell.csproj": {
-              "projectPath": "C:\\Users\\Nick\\Documents\\GitHub\\MailboxShell\\MailboxShell\\MailboxShell\\MailboxShell.csproj"
+            "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\MailboxShell\\MailboxShell\\MailboxShell.csproj": {
+              "projectPath": "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\MailboxShell\\MailboxShell\\MailboxShell.csproj"
             }
           }
         }
@@ -101,7 +101,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.102\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
       }
     }
   }

@@ -1,0 +1,12 @@
+C:\Users\Nick\Documents\repos\MailboxShell\MailboxShell\MailboxShell\bin\Release\netstandard2.0\MailboxShell.deps.json
+C:\Users\Nick\Documents\repos\MailboxShell\MailboxShell\MailboxShell\bin\Release\netstandard2.0\MailboxShell.dll
+C:\Users\Nick\Documents\repos\MailboxShell\MailboxShell\MailboxShell\bin\Release\netstandard2.0\MailboxShell.pdb
+C:\Users\Nick\Documents\repos\MailboxShell\MailboxShell\MailboxShell\bin\Release\netstandard2.0\SimpleMultithreadQueue.dll
+C:\Users\Nick\Documents\repos\MailboxShell\MailboxShell\MailboxShell\bin\Release\netstandard2.0\SimpleMultithreadQueue.pdb
+C:\Users\Nick\Documents\repos\MailboxShell\MailboxShell\MailboxShell\obj\Release\netstandard2.0\MailboxShell.csprojAssemblyReference.cache
+C:\Users\Nick\Documents\repos\MailboxShell\MailboxShell\MailboxShell\obj\Release\netstandard2.0\MailboxShell.AssemblyInfoInputs.cache
+C:\Users\Nick\Documents\repos\MailboxShell\MailboxShell\MailboxShell\obj\Release\netstandard2.0\MailboxShell.AssemblyInfo.cs
+C:\Users\Nick\Documents\repos\MailboxShell\MailboxShell\MailboxShell\obj\Release\netstandard2.0\MailboxShell.csproj.CoreCompileInputs.cache
+C:\Users\Nick\Documents\repos\MailboxShell\MailboxShell\MailboxShell\obj\Release\netstandard2.0\MailboxShell.csproj.CopyComplete
+C:\Users\Nick\Documents\repos\MailboxShell\MailboxShell\MailboxShell\obj\Release\netstandard2.0\MailboxShell.dll
+C:\Users\Nick\Documents\repos\MailboxShell\MailboxShell\MailboxShell\obj\Release\netstandard2.0\MailboxShell.pdb
