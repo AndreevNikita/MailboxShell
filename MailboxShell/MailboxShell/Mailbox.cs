@@ -1,10 +1,10 @@
-﻿using SimpleMultithreadQueue;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 namespace MailboxShell
@@ -75,27 +75,29 @@ namespace MailboxShell
 		}
 	}
 
-	public class Mailbox {
+	public partial class Mailbox {
 
 		public static bool PRINT_ERRORS = false;
 
 		public Socket Socket { get; private set; }
 		readonly int maxPacketSize;
-		MultithreadQueue<Packet> sendQueue = new MultithreadQueue<Packet>();
-		MultithreadQueue<IEnumerator<Packet>> sendPartsQueue = new MultithreadQueue<IEnumerator<Packet>>();
-		LinkedList<IEnumerator<Packet>> sendPartsList = new LinkedList<IEnumerator<Packet>>();
 
-		MultithreadQueue<Packet> receivedQueue = new MultithreadQueue<Packet>();
+		private volatile int sendQueueSize;
+		private volatile int receivedQueueSize;
+
+		Channel<Packet> sendChannel;
+		Channel<Packet> receivedChannel;
 
 		Packet currentSendPacket = null;
-		object currentSendPacketMutex = new object();
 		Packet currentReceivePacket = null;
 		int maxReceiveFragmentsPerTick;
 		int sendPacketsPerTick;
 
 		public bool IsConnected { get => Socket.Connected; }
-		public bool IsSendQueueEmpty { get => sendQueue.R_IsEmpty(); }
+		public bool IsSendQueueEmpty { get => sendQueueSize == 0; }
 
+		public int SendQueueSize { get => sendQueueSize; }
+		public int ReceivedCount { get => receivedQueueSize; }
 
 		private IMailboxOwner _MailboxOwner;
 		private static object OwnerChangeMutex { get; } = new object();
@@ -141,55 +143,61 @@ namespace MailboxShell
 
 		public Mailbox(Socket socket, int maxReceiveFragmentsPerTick = 64, int sendPacketsPerTick = 0, int maxPacketSize = 0) {
 			this.Socket = socket;
-			socket.Blocking = false; //Перевод сокета в неблокируемый режим
 			this.maxReceiveFragmentsPerTick = maxReceiveFragmentsPerTick;
 			this.sendPacketsPerTick = sendPacketsPerTick;
 			this.maxPacketSize = maxPacketSize;
+			this.sendChannel = Channel.CreateUnbounded<Packet>(new UnboundedChannelOptions() { SingleReader = true });
+			this.receivedChannel = Channel.CreateUnbounded<Packet>(new UnboundedChannelOptions() { SingleWriter = true, SingleReader = true });
+			SetSyncMode();
 		}
 
 		public void Send(Packet packet) {
-			sendQueue.Enqueue(packet);
+			Interlocked.Increment(ref sendQueueSize);
+			if(!sendChannel.Writer.TryWrite(packet))
+				sendChannel.Writer.WriteAsync(packet).AsTask().Wait();
 		}
 
 		public Packet Next() {
 			Packet packet;
-			if(receivedQueue.R_Dequeue(out packet))
+			if(receivedChannel.Reader.TryRead(out packet)) {
+				Interlocked.Decrement(ref receivedQueueSize);
 				return packet;
+			}
 			return null;
 		}
 
+
 		public IEnumerable<Packet> GetAllReceived() { 
-			return receivedQueue.R_PopAllToNewQueue();
+			for(int count = Interlocked.Exchange(ref receivedQueueSize, 0); count > 0; count--) { 
+				if(receivedChannel.Reader.TryRead(out Packet packet)) {
+					yield return packet;
+				} else { 
+					Interlocked.Add(ref receivedQueueSize, count);
+					break;
+				}
+			}
 		}
 
+		
+		[Obsolete("This Method is Deprecated (Works same as GetAllReceived)")]
 		public IEnumerable<Packet> ForeachReceived() { 
-			return receivedQueue.R_PopAll();
+			return GetAllReceived();
 		}
+
 
 		private byte[] receiveLengthBuffer = new byte[sizeof(int)];
 
-		public void ClearReceivedQueue() { 
-			receivedQueue.R_Clear();
-		}
-
-		public void ClearSendQueue() { 
-			sendQueue.R_Clear();
-		}
-
-		public void ClearAll() { 
-			ClearReceivedQueue();
-			ClearSendQueue();
-		}
+		private bool CheckReceivedPacketLength(int length) => (maxPacketSize == 0 || currentReceivePacket.length <= maxPacketSize) && (currentReceivePacket.length > 0);
 
 		public virtual bool Tick() {
+
 			int packetsCounter;
 			int fragmentsCounter;
 
-			if(!Socket.Connected)
+			if(!Socket.Connected) {
 				return false;
+			}
 			try {
-				foreach(IEnumerator<Packet> parts in sendPartsQueue)
-					sendPartsList.AddLast(parts);
 
 				fragmentsCounter = 0;
 				while(true) {
@@ -203,28 +211,31 @@ namespace MailboxShell
 						
 							if(!currentReceivePacket.IsLengthKnown)
 								break;
-							currentReceivePacket.CreateBuffer();
+
+							if(currentReceivePacket.length == 0) {
+							} else if(!CheckReceivedPacketLength(currentReceivePacket.length)) { 
+								Socket.Close();
+								return false;
+							} else {
+								currentReceivePacket.CreateBuffer();
+							}
 						} else
 							break;
 					} 
 
 					if(currentReceivePacket.IsLengthKnown) {
 						if(Socket.Available != 0) { 
-							if(currentReceivePacket.length == 0) {
-							} else if(maxPacketSize != 0 && currentReceivePacket.length > maxPacketSize) { 
-								Socket.Close();
-								return false;
-							} else {
-								try {
-									currentReceivePacket.handledLength += Socket.Receive(currentReceivePacket.data, currentReceivePacket.handledLength, currentReceivePacket.length - currentReceivePacket.handledLength, 0);
-								} catch(Exception e) { 
-									Console.WriteLine(e);
-									Console.WriteLine(e.StackTrace);
-								}
+							try {
+								currentReceivePacket.handledLength += Socket.Receive(currentReceivePacket.data, currentReceivePacket.handledLength, currentReceivePacket.length - currentReceivePacket.handledLength, 0);
+							} catch(Exception e) { 
+								Console.WriteLine(e);
+								Console.WriteLine(e.StackTrace);
 							}
 
 							if(currentReceivePacket.handledLength == currentReceivePacket.length) { 
-								receivedQueue.Enqueue(currentReceivePacket);
+								if(!receivedChannel.Writer.TryWrite(currentReceivePacket))
+									break;
+								Interlocked.Increment(ref receivedQueueSize);
 								currentReceivePacket = null;
 							} else
 								break;
@@ -241,7 +252,7 @@ namespace MailboxShell
 				while(true) {
 					
 					if(currentSendPacket == null) {
-						if(!sendQueue.R_DequeueReady(out currentSendPacket)) {
+						if(!sendChannel.Reader.TryRead(out currentSendPacket)) {
 							break;
 						}
 						if(currentSendPacket == null) { 
@@ -259,6 +270,7 @@ namespace MailboxShell
 						if(currentSendPacket.handledLength == currentSendPacket.length) {
 							currentSendPacket = null;
 							packetsCounter++;
+							Interlocked.Decrement(ref sendQueueSize);
 							if(sendPacketsPerTick != 0 && packetsCounter == sendPacketsPerTick)
 								break;
 						}  else
@@ -277,6 +289,18 @@ namespace MailboxShell
 
 		public void Close() { 
 			Socket.Close();
+		}
+
+		//To use a socket in asynchronous mode (StartListenAsync)
+
+		private void SetAsyncMode() { 
+			Socket.Blocking = true;
+		}
+
+		//To use a socket in asynchronous mode (StartListenAsync)
+
+		private void SetSyncMode() { 
+			Socket.Blocking = false;
 		}
 
 	}
@@ -309,6 +333,14 @@ namespace MailboxShell
 
 		public static void RemoveMailbox(this IMailboxOwner owner) {
 			owner.GetMailbox()?.RemoveOwner();
+		}
+	}
+
+	public class MailboxUsingException : Exception { 
+
+		public readonly Mailbox Mailbox;
+		public MailboxUsingException(Mailbox mailbox, string message) : base(message) {
+			Mailbox = mailbox;
 		}
 	}
 }

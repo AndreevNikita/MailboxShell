@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "8Dw24sTq1mTSDqnOQ4nrSrGy2AEZ1jHhRVb9lIO0Rp3uV02dk6hrnCGo1iYMgFyQhdGtu2sexm9+WnTFRUJ4Ag==",
+  "dgSpecHash": "H5/wucxF7VtKFb/RY+j8axpT58WNF0it+R+l7q6y9qnKfYpZfyDavbiDozPtHrgkQvRgPOWF+Nb1dUM2kSvICA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\MailboxShell\\Test\\Test.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Nick\\.nuget\\packages\\system.threading.channels\\5.0.0\\system.threading.channels.5.0.0.nupkg.sha512"
+  ],
   "logs": []
 }

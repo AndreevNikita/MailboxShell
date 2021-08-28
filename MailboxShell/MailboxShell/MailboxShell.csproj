@@ -8,17 +8,21 @@
     <Copyright>Nikita Andreev</Copyright>
     <RepositoryUrl>https://github.com/AndreevNikita/MailboxShell</RepositoryUrl>
     <PackageTags>c# socket packets network tcp-socket c-sharp-library</PackageTags>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
+    <Version>1.1.0-beta</Version>
+    <PackageProjectUrl>https://github.com/AndreevNikita/MailboxShell</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SimpleMultithreadQueue\SimpleMultithreadQueue\SimpleMultithreadQueue.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\..\..\SerializeMethodsAutoBuilder\LICENSE">
+    <None Include="..\..\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Threading.Channels" Version="5.0.0" />
   </ItemGroup>
 
 </Project>

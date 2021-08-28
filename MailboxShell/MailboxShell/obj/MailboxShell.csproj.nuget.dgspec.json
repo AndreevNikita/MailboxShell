@@ -5,74 +5,13 @@
   },
   "projects": {
     "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\MailboxShell\\MailboxShell\\MailboxShell.csproj": {
-      "version": "1.0.0",
+      "version": "1.1.0-beta",
       "restore": {
         "projectUniqueName": "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\MailboxShell\\MailboxShell\\MailboxShell.csproj",
         "projectName": "MailboxShell",
         "projectPath": "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\MailboxShell\\MailboxShell\\MailboxShell.csproj",
         "packagesPath": "C:\\Users\\Nick\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\MailboxShell\\MailboxShell\\obj\\",
-        "projectStyle": "PackageReference",
-        "configFilePaths": [
-          "C:\\Users\\Nick\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
-        ],
-        "originalTargetFrameworks": [
-          "netstandard2.0"
-        ],
-        "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
-        },
-        "frameworks": {
-          "netstandard2.0": {
-            "targetAlias": "netstandard2.0",
-            "projectReferences": {
-              "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\SimpleMultithreadQueue\\SimpleMultithreadQueue\\SimpleMultithreadQueue.csproj": {
-                "projectPath": "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\SimpleMultithreadQueue\\SimpleMultithreadQueue\\SimpleMultithreadQueue.csproj"
-              }
-            }
-          }
-        },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        }
-      },
-      "frameworks": {
-        "netstandard2.0": {
-          "targetAlias": "netstandard2.0",
-          "dependencies": {
-            "NETStandard.Library": {
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[2.0.3, )",
-              "autoReferenced": true
-            }
-          },
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
-        }
-      }
-    },
-    "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\SimpleMultithreadQueue\\SimpleMultithreadQueue\\SimpleMultithreadQueue.csproj": {
-      "version": "1.0.1",
-      "restore": {
-        "projectUniqueName": "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\SimpleMultithreadQueue\\SimpleMultithreadQueue\\SimpleMultithreadQueue.csproj",
-        "projectName": "SimpleMultithreadQueue",
-        "projectPath": "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\SimpleMultithreadQueue\\SimpleMultithreadQueue\\SimpleMultithreadQueue.csproj",
-        "packagesPath": "C:\\Users\\Nick\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Nick\\Documents\\repos\\MailboxShell\\SimpleMultithreadQueue\\SimpleMultithreadQueue\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Nick\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -106,6 +45,10 @@
               "target": "Package",
               "version": "[2.0.3, )",
               "autoReferenced": true
+            },
+            "System.Threading.Channels": {
+              "target": "Package",
+              "version": "[5.0.0, )"
             }
           },
           "imports": [

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>MailboxShell</id>
+    <version>1.1.0-beta</version>
+    <authors>Nikita Andreev</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="file">LICENSE</license>
+    <licenseUrl>https://aka.ms/deprecateLicenseUrl</licenseUrl>
+    <projectUrl>https://github.com/AndreevNikita/MailboxShell</projectUrl>
+    <description>C# TCP sockets shell for a more simple network packets sending and receiving</description>
+    <copyright>Nikita Andreev</copyright>
+    <tags>c# socket packets network tcp-socket c-sharp-library</tags>
+    <repository url="https://github.com/AndreevNikita/MailboxShell" />
+    <dependencies>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="System.Threading.Channels" version="5.0.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="C:\Users\Nick\Documents\repos\MailboxShell\MailboxShell\MailboxShell\bin\Release\netstandard2.0\MailboxShell.dll" target="lib\netstandard2.0\MailboxShell.dll" />
+    <file src="C:\Users\Nick\Documents\repos\MailboxShell\LICENSE" target="LICENSE" />
+  </files>
+</package>

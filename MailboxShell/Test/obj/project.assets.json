@@ -2,46 +2,66 @@
   "version": 3,
   "targets": {
     "net5.0": {
-      "MailboxShell/1.0.0": {
+      "System.Threading.Channels/5.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netcoreapp3.0/System.Threading.Channels.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.0/System.Threading.Channels.dll": {}
+        }
+      },
+      "MailboxShell/1.1.0-beta": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "SimpleMultithreadQueue": "1.0.1"
+          "System.Threading.Channels": "5.0.0"
         },
         "compile": {
           "bin/placeholder/MailboxShell.dll": {}
         },
         "runtime": {
           "bin/placeholder/MailboxShell.dll": {}
-        }
-      },
-      "SimpleMultithreadQueue/1.0.1": {
-        "type": "project",
-        "framework": ".NETStandard,Version=v2.0",
-        "compile": {
-          "bin/placeholder/SimpleMultithreadQueue.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/SimpleMultithreadQueue.dll": {}
         }
       }
     }
   },
   "libraries": {
-    "MailboxShell/1.0.0": {
+    "System.Threading.Channels/5.0.0": {
+      "sha512": "RLBIxntLaG9pRmmuVDwY1kc8Bvp/FQzSxPU+19VekkScKkWtVP9r8bLhm28ama3usc816UBrmkg3vv3jUea/hw==",
+      "type": "package",
+      "path": "system.threading.channels/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net461/System.Threading.Channels.dll",
+        "lib/net461/System.Threading.Channels.xml",
+        "lib/netcoreapp3.0/System.Threading.Channels.dll",
+        "lib/netcoreapp3.0/System.Threading.Channels.xml",
+        "lib/netstandard1.3/System.Threading.Channels.dll",
+        "lib/netstandard1.3/System.Threading.Channels.xml",
+        "lib/netstandard2.0/System.Threading.Channels.dll",
+        "lib/netstandard2.0/System.Threading.Channels.xml",
+        "lib/netstandard2.1/System.Threading.Channels.dll",
+        "lib/netstandard2.1/System.Threading.Channels.xml",
+        "system.threading.channels.5.0.0.nupkg.sha512",
+        "system.threading.channels.nuspec",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
+    },
+    "MailboxShell/1.1.0-beta": {
       "type": "project",
       "path": "../MailboxShell/MailboxShell.csproj",
       "msbuildProject": "../MailboxShell/MailboxShell.csproj"
-    },
-    "SimpleMultithreadQueue/1.0.1": {
-      "type": "project",
-      "path": "../../SimpleMultithreadQueue/SimpleMultithreadQueue/SimpleMultithreadQueue.csproj",
-      "msbuildProject": "../../SimpleMultithreadQueue/SimpleMultithreadQueue/SimpleMultithreadQueue.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net5.0": [
-      "MailboxShell >= 1.0.0"
+      "MailboxShell >= 1.1.0-beta"
     ]
   },
   "packageFolders": {
