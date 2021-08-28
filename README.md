@@ -119,7 +119,7 @@ while(true) {
 
 private async Task handlePackets(Mailbox mailbox, CancellationToken cancellationToken) { 
     while(!cancellationToken.IsCancellationRequested) {
-        Packet packet = await mailbox.GetNextAsync();
+        Packet packet = await mailbox.GetNextAsync(cancellationToken);
         string responseString = Encoding.UTF8.GetString(packet.data);
         Console.WriteLine($"Server response: \"{responseString}\"");
     }
