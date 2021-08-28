@@ -45,8 +45,8 @@ Mailbox class has constructor: `public Mailbox(Socket socket, int maxReceiveFrag
 * `int SendQueueSize` - get send queue size
 * `void Close()` - close socket
 * `bool IsSendQueueEmpty` - checks if send queue is empty
-* `void ClearReceived()` - clears **received packet queue**
-* `void ClearReceivedQueue()` - clears **send packet queue**
+* `void ClearReceived()` - clears received packet queue
+* `void ClearReceivedQueue()` - clears send packet queue
 * `void ClearAll()` - clears both packet queues
 * `Packet Packet.CloneDataRef()` - returns new ready for sending Packet with some data ref
 
@@ -137,20 +137,4 @@ Console.ReadKey();
 
 cts.Cancel();
 Task.WaitAll(listenTask, handlePacketsTask);
-
-public
-while(true) {
-	string message = Console.ReadLine();
-	mailbox.Send(new Packet(Encoding.UTF8.GetBytes(message)));
-	while(true) {
-		mailbox.Tick();
-		Packet receivedPacket = mailbox.Next(); //Try to get the next packet
-		if(receivedPacket != null) {
-			Console.WriteLine($"Server response: \"{Encoding.UTF8.GetString(receivedPacket.data)}\"");
-			break;			
-		}
-			
-		Thread.sleep(1);
-	}
-}
 ```
